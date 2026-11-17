@@ -128,6 +128,7 @@ router.get('/', asyncHandler(async (req, res) => {
 
 router.post('/', validateBody(memberSchema), asyncHandler(async (req, res) => {
   const input = req.body as z.infer<typeof memberSchema>;
+  // Los datos personales se cifran antes de guardarse en MySQL.
   const dniEncrypted = encryptText(input.dni);
   const emailEncrypted = input.email ? encryptText(input.email) : null;
   const connection = await pool.getConnection();
@@ -155,6 +156,7 @@ router.post('/', validateBody(memberSchema), asyncHandler(async (req, res) => {
       ],
     );
     const id = (result as { insertId: number }).insertId;
+    // Si guardar la auditoría falla, también se deshace el alta del socio.
     await insertAudit(connection, req.user!.id, 'CREATE', id);
     await connection.commit();
     res.status(201).json({ id_socio: id });

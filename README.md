@@ -16,6 +16,17 @@ Permite iniciar sesión y administrar socios, categorías y usuarios desde una p
 - **Servidor:** recibe y revisa las solicitudes.
 - **MySQL:** guarda la información.
 
+## ¿Dónde está cada parte del código?
+
+- `public/index.html`: la pantalla y los formularios.
+- `public/app.js`: los botones, las búsquedas y el envío de formularios.
+- `src/server.ts`: inicia el servidor.
+- `src/routes/`: las funciones para socios, categorías y usuarios.
+- `src/security/crypto.ts`: el cifrado de datos.
+- `database/schema.sql`: las tablas de MySQL.
+
+Un ejemplo sencillo para explicarlo: al registrar un socio, la página manda sus datos al servidor; el servidor los valida, cifra el DNI y los guarda en MySQL.
+
 ## Seguridad, explicado simple
 
 - Las contraseñas se guardan como un hash: el sistema no guarda la contraseña original.

@@ -39,6 +39,7 @@ router.post('/login', validateBody(loginSchema), asyncHandler(async (req, res) =
 
   try {
     await connection.beginTransaction();
+    // FOR UPDATE evita que dos intentos simultáneos ignoren el contador de fallos.
     const [rows] = await connection.execute<Array<RowDataPacket & {
       id_usuario: number;
       username: string;

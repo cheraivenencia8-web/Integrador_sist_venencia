@@ -16,6 +16,7 @@ export interface EncryptedPayload {
 }
 
 export function encryptText(text: string): EncryptedValue {
+  // El IV nuevo evita reutilizar los mismos parámetros para distintos datos.
   const iv = randomBytes(12);
   const cipher = createCipheriv('aes-256-gcm', config.dataEncryptionKey, iv);
   const ciphertext = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
@@ -29,10 +30,12 @@ export function decryptText(value: EncryptedValue): string {
 }
 
 export function hashDni(dni: string): Buffer {
+  // Esta huella permite buscar DNI duplicados sin guardarlos en texto claro.
   return createHmac('sha256', config.dniHashKey).update(dni).digest();
 }
 
 export function encryptPayload(payload: unknown): EncryptedPayload {
+  // Las exportaciones usan una clave distinta de la que cifra DNI y email.
   const iv = randomBytes(12);
   const cipher = createCipheriv('aes-256-gcm', config.exportEncryptionKey, iv);
   const ciphertext = Buffer.concat([cipher.update(JSON.stringify(payload), 'utf8'), cipher.final()]);
